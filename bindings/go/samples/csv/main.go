@@ -20,7 +20,7 @@ func main() {
 	var err error
 	var writer *csv.Writer
 	if *usecsv {
-		fileHandle, err = os.Create("test.csv")
+		fileHandle, err = os.Create(*path)
 		checkError("couldn't create", err)
 		defer func() {
 			fmt.Printf("gonna close \n")
@@ -30,26 +30,27 @@ func main() {
 
 	if fileHandle != nil {
 		writer = csv.NewWriter(fileHandle)
-		header := []string{"1", "2", "3", "4", "5"}
+		header := []string{"head1", "head2", "head3", "head4", "head5"}
 		err := writer.Write(header)
 		checkError("couldn't write", err)
 		writer.Flush()
 	}
 
+	if fileHandle != nil {
+		for i := 1; i <= 10; i++ {
+			value1 := fmt.Sprintf("v%d", i*1)
+			value2 := fmt.Sprintf("v%d", i*2)
+			value3 := fmt.Sprintf("v%d", i*3)
+			value4 := fmt.Sprintf("v%d", i*4)
+			value5 := fmt.Sprintf("v%d", i*5)
+			values := []string{value1, value2, value3, value4, value5}
+			err := writer.Write(values)
+			checkError("couldn't write", err)
+			writer.Flush()
+		}
+	}
+
 	fmt.Printf("i did some stuff \n")
-	// fileHandle, err := os.Create("test.csv")
-	// checkError("File not created", err)
-	// // until the end of main()
-	// defer fileHandle.Close()
-
-	// writer := csv.NewWriter(fileHandle)
-	// // until the end of main()
-	// defer writer.Flush()
-
-	// for _, value := range data {
-	// 	err := writer.Write(value)
-	// 	checkError("cannot write", err)
-	// }
 }
 
 func checkError(message string, err error) {
