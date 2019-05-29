@@ -170,7 +170,7 @@ func systemGetDriverVersion() (string, error) {
 	return C.GoString(&driver[0]), errorString(r)
 }
 
-func systemGetProcessName(pid uint) (string, error) {
+func (h handle) systemGetProcessName(pid uint) (string, error) {
 	var proc [szProcName]C.char
 
 	r := C.nvmlSystemGetProcessName(C.uint(pid), &proc[0], szProcName)
