@@ -570,6 +570,10 @@ func (d *Device) GetAllRunningProcesses() ([]ProcessInfo, error) {
 	return d.handle.deviceGetAllRunningProcesses()
 }
 
+func (d *Device) GetAccountingPids() ([]uint, error) {
+	return d.handle.deviceGetAccountingPids()
+}
+
 func (d *Device) GetAccountingStats(pid uint) (AccountingStats, error) {
 	return d.handle.deviceGetAccountingStats(pid)
 }
