@@ -568,7 +568,7 @@ func (h handle) deviceGetAllRunningProcesses() ([]ProcessInfo, error) {
 }
 
 func (h handle) deviceGetAccountingStats(pid uint) (AccountingStats, error) {
-	var stats c.nvmlAccountingStats_t
+	var stats C.nvmlAccountingStats_t
 	r := C.nvmlDeviceGetAccountingStats(h.dev, C.uint(pid), &stat)
 	if r == C.NVML_ERROR_NOT_SUPPORTED {
 		return nil, nil
