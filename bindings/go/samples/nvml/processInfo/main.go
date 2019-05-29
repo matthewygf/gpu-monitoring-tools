@@ -78,21 +78,25 @@ func main() {
 		select {
 		case <-ticker.C:
 			for i, device := range devices {
-				pInfo, err := device.GetAllRunningProcesses()
+				pids, err := device.GetAccountingPids()
 				if err != nil {
-					log.Panicf("Error getting device %d processes: %v\n", i, err)
+					log.Panicf("Error getting device %d accounting processes %v\n", i, err)
 				}
-				if len(pInfo) == 0 {
-					fmt.Printf("%5v %5s %5s %5s %-5s\n", i, "-", "-", "-", "-")
-				}
-				for j := range pInfo {
-					stats, err := device.GetAccountingStats(pInfo[j].PID)
-					if err != nil {
-						log.Fatalf("Error getting process %d accounting stats from device %d : %v\n", pInfo[j].PID, i, err)
-					}
-
-					fmt.Print("%5v %5v %5v %5v %5v",
-						i, pInfo[j].PID, stats.GpuUtilization, stats.MemoryUtilization, stats.MaxMemoryUsage)
+				// pInfo, err := device.GetAllRunningProcesses()
+				// if err != nil {
+				// 	log.Panicf("Error getting device %d processes: %v\n", i, err)
+				// }
+				// if len(pInfo) == 0 {
+				// 	fmt.Printf("%5v %5s %5s %5s %-5s\n", i, "-", "-", "-", "-")
+				// }
+				// for j := range pInfo {
+				// 	stats, err := device.GetAccountingStats(pInfo[j].PID)
+				// 	if err != nil {
+				// 		log.Printf("Process %d accounting stats from device %d : %v\n", pInfo[j].PID, i, err)
+				// 	}
+				// 	else{
+				// 		fmt.Print("%5v %5v %5v %5v %5v", i, pInfo[j].PID, stats.GpuUtilization, stats.MemoryUtilization, stats.MaxMemoryUsage)
+				// 	}
 
 					// fmt.Printf("%5v %5v %5v %5v %-5v\n",
 					// 	i, pInfo[j].PID, pInfo[j].Type, pInfo[j].MemoryUsed, pInfo[j].Name)

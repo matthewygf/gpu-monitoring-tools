@@ -492,6 +492,25 @@ func (h handle) deviceGetComputeRunningProcesses() ([]uint, []uint64, error) {
 	return pids, mems, errorString(r)
 }
 
+func (h handle) deviceGetAccountingPids() ([]uint, error) {
+	var count = C.uint(szProcs)
+	var gpuPids = [szProcs]C.uint(szProcs)
+
+	r := C.nvmlDeviceGetAccountingPids(h.dev, &count, &gpuPids)
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return nil, nil, nil
+	}
+
+	n := int(count)
+	pids := make([]uint, n)
+
+	for i := 0; i < n; i++ {
+		pids[i] = uint(gpuPids[i])
+	}
+
+	return pids, errorString(r)
+}
+
 func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 	var procs [szProcs]C.nvmlProcessInfo_t
 	var count = C.uint(szProcs)
