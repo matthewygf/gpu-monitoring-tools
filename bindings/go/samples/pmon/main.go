@@ -69,7 +69,6 @@ func main() {
 	intervalTime := *interval
 	ticker := time.NewTicker(time.Second * intervalTime)
 	defer ticker.Stop()
-	var row []string
 	if fileHandle == nil {
 		fmt.Printf("gpu,pid,sm_util,mem_util,name")
 	}
@@ -90,7 +89,7 @@ func main() {
 								log.Panicf("Error getting device %d proccess %d name %v \n", i, processUtils[j].PID, err)
 							}
 							if fileHandle != nil {
-								row = []string{
+								row := []string{
 									strconv.FormatInt(i), 
 									strconv.FormatUint(processUtils[j].PID, 10), 
 									strconv.FormatUint(processUtils[j].SmUtil, 10),
