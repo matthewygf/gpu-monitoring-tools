@@ -591,6 +591,10 @@ func (d *Device) GetProcessUtilization() ([]ProcessUtilization, error) {
 	return d.handle.deviceGetProcessUtilization()
 }
 
+func (d *Device) SystemGetProcessName(pid uint) (string, error) {
+	return d.handle.systemGetProcessName(pid)
+}
+
 func (d *Device) GetDeviceMode() (mode *DeviceMode, err error) {
 	defer func() {
 		if r := recover(); r != nil {
