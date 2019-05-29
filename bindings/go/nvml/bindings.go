@@ -531,7 +531,7 @@ func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 
 func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 	lastSeenTimeStamp := C.ulonglong(0)
-	var processesUtilizationSamples [64]C.nvmlProcessUtilizationSample_t
+	var processesUtilizationSamples [100]C.nvmlProcessUtilizationSample_t
 	var processesSamplesCount C.uint
 
 	r := C.nvmlDeviceGetProcessUtilization(h.dev, &processesUtilizationSamples[0], &processesSamplesCount, lastSeenTimeStamp)
