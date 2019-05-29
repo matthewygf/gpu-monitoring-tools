@@ -9,7 +9,6 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"strconv"
 
 	"github.com/matthewygf/gpu-monitoring-tools/bindings/go/nvml"
 )
@@ -74,7 +73,7 @@ func main() {
 	defer ticker.Stop()
 
 	var row []string
-	fmt.Println(PINFOHEADER)
+	// fmt.Println(PINFOHEADER)
 	for {
 		select {
 		case <-ticker.C:
@@ -87,12 +86,21 @@ func main() {
 					fmt.Printf("%5v %5s %5s %5s %-5s\n", i, "-", "-", "-", "-")
 				}
 				for j := range pInfo {
-					fmt.Printf("%5v %5v %5v %5v %-5v\n",
-						i, pInfo[j].PID, pInfo[j].Type, pInfo[j].MemoryUsed, pInfo[j].Name)
-					if fileHandle != nil {
-						// TODO: all the values, and implement deviceAccountingStats.
-						row = { strconv.FormatInt(i)}
+					stats, err := device.GetAccountingStats(pInfo[j].PID)
+					if err != nil {
+						log.Fatalf("Error getting process %d accounting stats from device %d : %v\n", pInfo[j].PID, i, err)
 					}
+
+					fmt.Print("%5v %5v %5v %5v %5v",
+						i, pInfo[j].PID, stats.GpuUtilization, stats.MemoryUtilization, stats.MaxMemoryUsage)
+
+					// fmt.Printf("%5v %5v %5v %5v %-5v\n",
+					// 	i, pInfo[j].PID, pInfo[j].Type, pInfo[j].MemoryUsed, pInfo[j].Name)
+
+					// if fileHandle != nil {
+					// 	// TODO: all the values, and implement deviceAccountingStats.
+					// 	row = { strconv.FormatInt(i)}
+					// }
 				}
 			}
 		case <-sigs:

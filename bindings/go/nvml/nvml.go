@@ -47,6 +47,15 @@ type Accounting struct {
 	BufferSize *uint
 }
 
+type AccountingStats struct {
+	GpuUtilization    uint
+	MemoryUtilization uint
+	MaxMemoryUsage    uint64
+	Time              uint64
+	StartTime         uint64
+	IsRunning         uint
+}
+
 type DeviceMode struct {
 	DisplayInfo    Display
 	Persistence    ModeState
@@ -559,6 +568,10 @@ func (d *Device) GetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 
 func (d *Device) GetAllRunningProcesses() ([]ProcessInfo, error) {
 	return d.handle.deviceGetAllRunningProcesses()
+}
+
+func (d *Device) GetAccountingStats(pid uint) (AccountingStats, error) {
+	return d.handle.deviceGetAccountingStats(pid)
 }
 
 func (d *Device) GetDeviceMode() (mode *DeviceMode, err error) {

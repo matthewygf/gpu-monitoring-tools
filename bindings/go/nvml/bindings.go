@@ -567,6 +567,29 @@ func (h handle) deviceGetAllRunningProcesses() ([]ProcessInfo, error) {
 	return processInfo, nil
 }
 
+func (h handle) deviceGetAccountingStats(pid uint) (AccountingStats, error) {
+	var stats c.nvmlAccountingStats_t
+	r := C.nvmlDeviceGetAccountingStats(h.dev, C.uint(pid), &stat)
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return nil, nil
+	}
+
+	if r != C.NVML_SUCCESS {
+		return nil, errorString(r)
+	}
+
+	accountStats := AccountingStats{
+		GpuUtilization:    uint(stats.gpuUtilization),
+		MemoryUtilization: uint(stats.memoryUtilization),
+		MaxMemoryUsage:    uint64(stats.maxMemoryUsage),
+		Time:              uint64(stats.time),
+		StartTime:         uint64(stats.startTime),
+		IsRunning:         uint(stats.isRunning),
+	}
+
+	return accountStats, nil
+}
+
 func (h handle) getClocksThrottleReasons() (reason ThrottleReason, err error) {
 	var clocksThrottleReasons C.ulonglong
 
