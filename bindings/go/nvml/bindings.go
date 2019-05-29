@@ -501,6 +501,8 @@ func (h handle) deviceGetAccountingPids() ([]uint, error) {
 		return nil, nil
 	}
 
+	fmt.Printf("Think it worked. \n")
+
 	n := int(count)
 	pids := make([]uint, n)
 
