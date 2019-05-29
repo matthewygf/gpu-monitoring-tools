@@ -87,7 +87,6 @@ func main() {
 					fmt.Printf("%5d,%5d,%5d,%5d\n",
 						i, *st.PCI.BAR1Used, *st.PCI.Throughput.RX, *st.PCI.Throughput.TX)
 				}
-
 			}
 		case <-sigs:
 			return
