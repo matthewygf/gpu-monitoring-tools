@@ -71,7 +71,7 @@ func main() {
 	ticker := time.NewTicker(time.Millisecond * intervalTime)
 	defer ticker.Stop()
 	if fileHandle == nil {
-		fmt.Printf("gpu_idx,bar1_used,pcie_read,pcie_write")
+		fmt.Printf("gpu_idx,bar1_used,pcie_read,pcie_write\n")
 	}
 	for {
 		select {
@@ -87,6 +87,9 @@ func main() {
 						strconv.FormatUint(uint64(*st.PCI.BAR1Used), 10),
 						strconv.FormatUint(uint64(*st.PCI.Throughput.RX), 10),
 						strconv.FormatUint(uint64(*st.PCI.Throughput.TX), 10)}
+					err := writer.Write(row)
+					checkAndPrintErrorNoFormat("Could not write row", err)
+					writer.Flush()
 				} else {
 					fmt.Printf("%5d,%5d,%5d,%5d\n",
 						i, *st.PCI.BAR1Used, *st.PCI.Throughput.RX, *st.PCI.Throughput.TX)

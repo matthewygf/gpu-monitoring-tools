@@ -70,7 +70,7 @@ func main() {
 	ticker := time.NewTicker(time.Millisecond * intervalTime)
 	defer ticker.Stop()
 	if fileHandle == nil {
-		fmt.Printf("gpu,pid,sm_util,mem_util,name")
+		fmt.Printf("gpu,pid,sm_util,mem_util,name\n")
 	}
 
 	for {
