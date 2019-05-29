@@ -529,12 +529,8 @@ func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 	return pids, mems, errorString(r)
 }
 
-func (h handle) deviceGetProcessUtilization(params ...uint) ([]ProcessUtilization, error) {
+func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 	lastSeenTimeStamp := C.ulonglong(0)
-	if len(params) > 0 {
-		lastSeenTimeStamp = C.ulonglong(params[0])
-	}
-
 	var processesUtilizationSamples [8]C.nvmlProcessUtilizationSample_t
 	var processesSamplesCount = C.uint(8)
 

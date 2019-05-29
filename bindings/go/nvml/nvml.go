@@ -587,8 +587,8 @@ func (d *Device) GetAccountingStats(pid uint) (AccountingStats, error) {
 	return d.handle.deviceGetAccountingStats(pid)
 }
 
-func (d *Device) GetProcessUtilization(params ...uint) ([]ProcessUtilization, error) {
-	return d.handle.deviceGetProcessUtilization(params[:]...)
+func (d *Device) GetProcessUtilization() ([]ProcessUtilization, error) {
+	return d.handle.deviceGetProcessUtilization()
 }
 
 func (d *Device) GetDeviceMode() (mode *DeviceMode, err error) {
