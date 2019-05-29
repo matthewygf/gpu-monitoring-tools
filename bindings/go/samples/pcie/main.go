@@ -20,6 +20,12 @@ var tocsv = flag.Bool("csv", false, "write values to csv instead.")
 var filepath = flag.String("logpath", "processinfo.csv", "path to create the csv file.")
 var interval = flag.Int("interval", 1, "interval time to run the profiler")
 
+func checkAndPrintErrorNoFormat(message string, err error) {
+	if err != nil {
+		log.Fatalln(message, err)
+	}
+}
+
 func main() {
 	nvml.Init()
 	defer nvml.Shutdown()
