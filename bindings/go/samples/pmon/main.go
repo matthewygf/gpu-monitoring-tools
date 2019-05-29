@@ -66,7 +66,7 @@ func main() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
-	intervalTime := *interval
+	intervalTime := time.Duration(*interval)
 	ticker := time.NewTicker(time.Second * intervalTime)
 	defer ticker.Stop()
 	if fileHandle == nil {
@@ -89,10 +89,10 @@ func main() {
 							}
 							if fileHandle != nil {
 								row := []string{
-									strconv.FormatInt(i),
-									strconv.FormatUint(processUtils[j].PID, 10),
-									strconv.FormatUint(processUtils[j].SmUtil, 10),
-									strconv.FormatUint(processUtils[j].MemUtil, 10),
+									strconv.FormatInt(i, 10),
+									strconv.FormatUint(uint64(processUtils[j].PID), 10),
+									strconv.FormatUint(uint64(processUtils[j].SmUtil), 10),
+									strconv.FormatUint(uint64(processUtils[j].MemUtil), 10),
 									name}
 								err := writer.Write(row)
 								checkAndPrintErrorNoFormat("Could not write row", err)
