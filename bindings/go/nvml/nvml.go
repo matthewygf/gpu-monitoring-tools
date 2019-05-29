@@ -268,6 +268,15 @@ type DeviceStatus struct {
 	Performance PerfState
 }
 
+type ProcessUtilization struct {
+	DecUtil   uint
+	EncUtil   uint
+	MemUtil   uint
+	PID       uint
+	SmUtil    uint
+	TimeStamp uint64
+}
+
 func assert(err error) {
 	if err != nil {
 		panic(err)
@@ -576,6 +585,10 @@ func (d *Device) GetAccountingPids() ([]uint, error) {
 
 func (d *Device) GetAccountingStats(pid uint) (AccountingStats, error) {
 	return d.handle.deviceGetAccountingStats(pid)
+}
+
+func (d *Device) GetProcessUtilization(params ...uint64) ([]ProcessUtilization, error) {
+	return d.handle.deviceGetProcessUtilization(params)
 }
 
 func (d *Device) GetDeviceMode() (mode *DeviceMode, err error) {

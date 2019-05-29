@@ -529,6 +529,36 @@ func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 	return pids, mems, errorString(r)
 }
 
+func (h handle) deviceGetProcessUtilization(params ...uint64) ([]ProcessUtilization, error) {
+	processCounts := 8
+	lastSeenTimeStamp := C.ulonglong(0)
+	if len(params) > 0 {
+		lastSeenTimeStamp = C.ulonglong(params[0])
+		processCounts = params[1]
+	}
+
+	var processesUtilizationSamples [processCounts]C.nvmlProcessUtilizationSample_t
+	var processesSamplesCount [processCounts]C.uint
+
+	r := C.nvmlDeviceGetProcessUtilization(h.dev, &processesUtilizationSamples[0], &processesSamplesCount, lastSeenTimeStamp)
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return nil, nil
+	}
+	n := int(processesSamplesCount)
+	utilSamples := make([]ProcessUtilization, n)
+	for i := 0; i < n; i++ {
+		utilSamples[i] = ProcessUtilization{
+			DecUtil:   processesUtilizationSamples[i].decUtil,
+			EncUtil:   processesUtilizationSamples[i].encUtil,
+			SmUtil:    processesUtilizationSamples[i].smUtil,
+			PID:       processesUtilizationSamples[i].pid,
+			TimeStamp: processesUtilizationSamples[i].timeStamp,
+			MemUtil:   processesUtilizationSamples[i].memUtil,
+		}
+	}
+	return utilSamples, errorString(r)
+}
+
 func (h handle) deviceGetAllRunningProcesses() ([]ProcessInfo, error) {
 	cPids, cpMems, err := h.deviceGetComputeRunningProcesses()
 	if err != nil {
