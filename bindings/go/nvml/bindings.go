@@ -547,16 +547,16 @@ func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 	}
 
 	utilSamples := make([]ProcessUtilization, n)
-	// for i := 0; i < n; i++ {
-	// 	utilSamples[i] = ProcessUtilization{
-	// 		DecUtil:   uint(processesUtilizationSamples[i].decUtil),
-	// 		EncUtil:   uint(processesUtilizationSamples[i].encUtil),
-	// 		SmUtil:    uint(processesUtilizationSamples[i].smUtil),
-	// 		PID:       uint(processesUtilizationSamples[i].pid),
-	// 		TimeStamp: uint64(processesUtilizationSamples[i].timeStamp),
-	// 		MemUtil:   uint(processesUtilizationSamples[i].memUtil),
-	// 	}
-	// }
+	for i := 0; i < n; i++ {
+		utilSamples[i] = ProcessUtilization{
+			DecUtil:   uint(processesUtilizationSamples[i].decUtil),
+			EncUtil:   uint(processesUtilizationSamples[i].encUtil),
+			SmUtil:    uint(processesUtilizationSamples[i].smUtil),
+			PID:       uint(processesUtilizationSamples[i].pid),
+			TimeStamp: uint64(processesUtilizationSamples[i].timeStamp),
+			MemUtil:   uint(processesUtilizationSamples[i].memUtil),
+		}
+	}
 	return utilSamples, errorString(r)
 }
 
