@@ -82,7 +82,7 @@ func main() {
 				if err != nil {
 					log.Panicf("Error getting device %d accounting info %v\n", i, err)
 				} else {
-					fmt.Printf("%v \n", *deviceMode.AccountingInfo.Mode.String())
+					fmt.Printf("%v \n", *deviceMode.AccountingInfo.Mode)
 				}
 
 				pids, err := device.GetAccountingPids()
