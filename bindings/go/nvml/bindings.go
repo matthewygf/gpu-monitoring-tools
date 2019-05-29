@@ -569,16 +569,18 @@ func (h handle) deviceGetAllRunningProcesses() ([]ProcessInfo, error) {
 
 func (h handle) deviceGetAccountingStats(pid uint) (AccountingStats, error) {
 	var stats C.nvmlAccountingStats_t
-	r := C.nvmlDeviceGetAccountingStats(h.dev, C.uint(pid), &stat)
+	r := C.nvmlDeviceGetAccountingStats(h.dev, C.uint(pid), &stats)
+	var accountStats AccountingStats
+
 	if r == C.NVML_ERROR_NOT_SUPPORTED {
-		return nil, nil
+		return accountStats, nil
 	}
 
 	if r != C.NVML_SUCCESS {
-		return nil, errorString(r)
+		return accountStats, errorString(r)
 	}
 
-	accountStats := AccountingStats{
+	accountStats = AccountingStats{
 		GpuUtilization:    uint(stats.gpuUtilization),
 		MemoryUtilization: uint(stats.memoryUtilization),
 		MaxMemoryUsage:    uint64(stats.maxMemoryUsage),
