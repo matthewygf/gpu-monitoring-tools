@@ -530,15 +530,13 @@ func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 }
 
 func (h handle) deviceGetProcessUtilization(params ...uint) ([]ProcessUtilization, error) {
-	processCounts := 8
 	lastSeenTimeStamp := C.ulonglong(0)
 	if len(params) > 0 {
 		lastSeenTimeStamp = C.ulonglong(params[0])
-		processCounts = params[1]
 	}
 
-	var processesUtilizationSamples [processCounts]C.nvmlProcessUtilizationSample_t
-	var processesSamplesCount = C.uint(processCounts)
+	var processesUtilizationSamples [8]C.nvmlProcessUtilizationSample_t
+	var processesSamplesCount = C.uint(8)
 
 	r := C.nvmlDeviceGetProcessUtilization(h.dev, &processesUtilizationSamples[0], &processesSamplesCount, lastSeenTimeStamp)
 	if r == C.NVML_ERROR_NOT_SUPPORTED {
