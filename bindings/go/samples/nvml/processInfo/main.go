@@ -83,7 +83,7 @@ func main() {
 					log.Panicf("Error getting device %d accounting processes %v\n", i, err)
 				}
 				for j := range pids {
-					fmt.Printf("%d process on device %d is available \n", j, i)
+					fmt.Printf("%d process on device %d is available \n", pids[j], i)
 				}
 				// pInfo, err := device.GetAllRunningProcesses()
 				// if err != nil {
