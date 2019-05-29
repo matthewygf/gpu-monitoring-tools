@@ -78,6 +78,13 @@ func main() {
 		select {
 		case <-ticker.C:
 			for i, device := range devices {
+				accountingInfo, err := device.getAccountingInfo()
+				if err != nil {
+					log.Panicf("Error getting device %d accounting info %v\n", i, err)
+				} else {
+					fmt.Printf("%v \n", accountingInfo.ModeState.String())
+				}
+
 				pids, err := device.GetAccountingPids()
 				if err != nil {
 					log.Panicf("Error getting device %d accounting processes %v\n", i, err)
