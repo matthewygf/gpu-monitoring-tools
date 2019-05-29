@@ -78,20 +78,30 @@ func main() {
 		select {
 		case <-ticker.C:
 			for i, device := range devices {
-				deviceMode, err := device.GetDeviceMode()
+				processUtils, err := device.GetProcessUtilization()
 				if err != nil {
-					log.Panicf("Error getting device %d accounting info %v\n", i, err)
+					log.Panicf("Error getting device %d processes utilization %v \n", i, err)
 				} else {
-					fmt.Printf("%v \n", deviceMode.AccountingInfo.Mode)
+					for j := range processUtils {
+						fmt.Printf("%5v,%5v,%5v,%5v",
+							i, processUtils[j].PID, processUtils[j].SmUtil, processUtils[j].MemUtil)
+					}
 				}
 
-				pids, err := device.GetAccountingPids()
-				if err != nil {
-					log.Panicf("Error getting device %d accounting processes %v\n", i, err)
-				}
-				for j := range pids {
-					fmt.Printf("%d process on device %d is available \n", pids[j], i)
-				}
+				// deviceMode, err := device.GetDeviceMode()
+				// if err != nil {
+				// 	log.Panicf("Error getting device %d accounting info %v\n", i, err)
+				// } else {
+				// 	fmt.Printf("%v \n", deviceMode.AccountingInfo.Mode)
+				// }
+
+				// pids, err := device.GetAccountingPids()
+				// if err != nil {
+				// 	log.Panicf("Error getting device %d accounting processes %v\n", i, err)
+				// }
+				// for j := range pids {
+				// 	fmt.Printf("%d process on device %d is available \n", pids[j], i)
+				// }
 				// pInfo, err := device.GetAllRunningProcesses()
 				// if err != nil {
 				// 	log.Panicf("Error getting device %d processes: %v\n", i, err)
