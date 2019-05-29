@@ -83,8 +83,10 @@ func main() {
 					log.Panicf("Error getting device %d processes utilization %v \n", i, err)
 				} else {
 					for j := range processUtils {
-						fmt.Printf("%5v,%5v,%5v,%5v\n",
-							i, processUtils[j].PID, processUtils[j].SmUtil, processUtils[j].MemUtil)
+						if processUtils[j].SmUtil > 0 {
+							fmt.Printf("%5v,%5v,%5v,%5v\n",
+								i, processUtils[j].PID, processUtils[j].SmUtil, processUtils[j].MemUtil)
+						}
 					}
 				}
 
