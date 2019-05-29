@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/csv"
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -98,14 +97,14 @@ func main() {
 				// 		fmt.Print("%5v %5v %5v %5v %5v", i, pInfo[j].PID, stats.GpuUtilization, stats.MemoryUtilization, stats.MaxMemoryUsage)
 				// 	}
 
-					// fmt.Printf("%5v %5v %5v %5v %-5v\n",
-					// 	i, pInfo[j].PID, pInfo[j].Type, pInfo[j].MemoryUsed, pInfo[j].Name)
+				// fmt.Printf("%5v %5v %5v %5v %-5v\n",
+				// 	i, pInfo[j].PID, pInfo[j].Type, pInfo[j].MemoryUsed, pInfo[j].Name)
 
-					// if fileHandle != nil {
-					// 	// TODO: all the values, and implement deviceAccountingStats.
-					// 	row = { strconv.FormatInt(i)}
-					// }
-				}
+				// if fileHandle != nil {
+				// 	// TODO: all the values, and implement deviceAccountingStats.
+				// 	row = { strconv.FormatInt(i)}
+				// }
+				// }
 			}
 		case <-sigs:
 			return
