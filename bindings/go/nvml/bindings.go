@@ -539,7 +539,7 @@ func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 	n := int(processesSamplesCount)
 	fmt.Printf("%d \n", n)
 
-	var processesUtilizationSamples [n]C.nvmlProcessUtilizationSample_t
+	processesUtilizationSamples := make([]C.nvmlProcessUtilizationSample_t, n)
 
 	r = C.nvmlDeviceGetProcessUtilization(h.dev, &processesUtilizationSamples[0], &processesSamplesCount, lastSeenTimeStamp)
 	if r == C.NVML_ERROR_NOT_SUPPORTED {
