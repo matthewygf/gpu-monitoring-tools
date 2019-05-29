@@ -90,7 +90,7 @@ func main() {
 								log.Panicf("Error getting device %d proccess %d name %v \n", i, processUtils[j].PID, err)
 							}
 							if fileHandle != nil {
-								row = {
+								row = []string{
 									strconv.FormatInt(i), 
 									strconv.FormatUint(processUtils[j].PID, 10), 
 									strconv.FormatUint(processUtils[j].SmUtil, 10),

@@ -3,13 +3,13 @@
 package main
 
 import (
-	"strconv"
 	"encoding/csv"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -77,7 +77,7 @@ func main() {
 					log.Panicf("Error getting device %d status: %v\n", i, err)
 				}
 				if fileHandle != nil {
-					row = {
+					row = []string{
 						strconv.FormatInt(i),
 						strconv.FormatUint(*st.PCI.BAR1Used, 10),
 						strconv.FormatUint(*st.PCI.Throughput.RX, 10),
@@ -85,9 +85,9 @@ func main() {
 					}
 				} else {
 					fmt.Printf("%5d,%5d,%5d,%5d\n",
-					i, *st.PCI.BAR1Used, *st.PCI.Throughput.RX, *st.PCI.Throughput.TX)
+						i, *st.PCI.BAR1Used, *st.PCI.Throughput.RX, *st.PCI.Throughput.TX)
 				}
-				
+
 			}
 		case <-sigs:
 			return
