@@ -62,7 +62,7 @@ func main() {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	intervalTime := time.Duration(*interval)
-	ticker := time.NewTicker(time.Second * intervalTime)
+	ticker := time.NewTicker(time.Millisecond * intervalTime)
 	defer ticker.Stop()
 	if fileHandle == nil {
 		fmt.Printf("gpu_idx,bar1_used,pcie_read,pcie_write")
@@ -77,7 +77,7 @@ func main() {
 				}
 				if fileHandle != nil {
 					row := []string{
-						strconv.FormatInt(i, 10),
+						strconv.FormatInt(int64(i), 10),
 						strconv.FormatUint(uint64(*st.PCI.BAR1Used), 10),
 						strconv.FormatUint(uint64(*st.PCI.Throughput.RX), 10),
 						strconv.FormatUint(uint64(*st.PCI.Throughput.TX), 10)}

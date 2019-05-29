@@ -17,7 +17,7 @@ import (
 
 var tocsv = flag.Bool("csv", false, "write values to csv instead.")
 var filepath = flag.String("logpath", "processinfo.csv", "path to create the csv file.")
-var interval = flag.Int("interval", 1, "interval time to run the profiler")
+var interval = flag.Int("interval", 500, "interval time to run the profiler, in milliseconds")
 
 func checkAndPrintErrorNoFormat(message string, err error) {
 	if err != nil {
@@ -67,7 +67,7 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	intervalTime := time.Duration(*interval)
-	ticker := time.NewTicker(time.Second * intervalTime)
+	ticker := time.NewTicker(time.Millisecond * intervalTime)
 	defer ticker.Stop()
 	if fileHandle == nil {
 		fmt.Printf("gpu,pid,sm_util,mem_util,name")
@@ -89,7 +89,7 @@ func main() {
 							}
 							if fileHandle != nil {
 								row := []string{
-									strconv.FormatInt(i, 10),
+									strconv.FormatInt(int64(i), 10),
 									strconv.FormatUint(uint64(processUtils[j].PID), 10),
 									strconv.FormatUint(uint64(processUtils[j].SmUtil), 10),
 									strconv.FormatUint(uint64(processUtils[j].MemUtil), 10),
