@@ -501,13 +501,12 @@ func (h handle) deviceGetAccountingPids() ([]uint, error) {
 		return nil, nil
 	}
 
-	fmt.Printf("Think it worked. \n")
-
 	n := int(count)
 	pids := make([]uint, n)
 
 	for i := 0; i < n; i++ {
 		pids[i] = uint(gpuPids[i])
+		fmt.Printf("%d . \n", pids[i])
 	}
 
 	return pids, errorString(r)
