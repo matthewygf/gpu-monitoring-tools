@@ -2,13 +2,13 @@
 package main
 
 import (
-	"strconv"
 	"encoding/csv"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -81,7 +81,6 @@ func main() {
 				if err != nil {
 					log.Panicf("Error getting device %d processes utilization %v \n", i, err)
 				} else {
-					
 					for j := range processUtils {
 						if processUtils[j].SmUtil > 0 {
 							name, err := device.SystemGetProcessName(processUtils[j].PID)
@@ -90,18 +89,17 @@ func main() {
 							}
 							if fileHandle != nil {
 								row := []string{
-									strconv.FormatInt(i), 
-									strconv.FormatUint(processUtils[j].PID, 10), 
+									strconv.FormatInt(i),
+									strconv.FormatUint(processUtils[j].PID, 10),
 									strconv.FormatUint(processUtils[j].SmUtil, 10),
 									strconv.FormatUint(processUtils[j].MemUtil, 10),
-									name
-								}
+									name}
 								err := writer.Write(row)
 								checkAndPrintErrorNoFormat("Could not write row", err)
 								writer.Flush()
 							} else {
 								fmt.Printf("%5v,%5v,%5v,%5v,%v\n",
-								i, processUtils[j].PID, processUtils[j].SmUtil, processUtils[j].MemUtil, name)
+									i, processUtils[j].PID, processUtils[j].SmUtil, processUtils[j].MemUtil, name)
 							}
 						}
 					}

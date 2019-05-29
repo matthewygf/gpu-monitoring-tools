@@ -80,8 +80,7 @@ func main() {
 						strconv.FormatInt(i),
 						strconv.FormatUint(*st.PCI.BAR1Used, 10),
 						strconv.FormatUint(*st.PCI.Throughput.RX, 10),
-						strconv.FormatUint(*st.PCI.Throughput.TX, 10)
-					}
+						strconv.FormatUint(*st.PCI.Throughput.TX, 10)}
 				} else {
 					fmt.Printf("%5d,%5d,%5d,%5d\n",
 						i, *st.PCI.BAR1Used, *st.PCI.Throughput.RX, *st.PCI.Throughput.TX)
