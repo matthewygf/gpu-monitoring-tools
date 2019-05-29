@@ -531,17 +531,22 @@ func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 
 func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 	lastSeenTimeStamp := C.ulonglong(0)
-
-	var processesUtilizationSamples [128]C.nvmlProcessUtilizationSample_t
 	var processesSamplesCount C.uint
+	r := C.nvmlDeviceGetProcessUtilization(h.dev, nil, &processesSamplesCount, lastSeenTimeStamp)
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return nil, nil
+	}
+	n := int(processesSamplesCount)
+	fmt.Printf("%d \n", n)
+
+	var processesUtilizationSamples [uint(processesSamplesCount) + 1]C.nvmlProcessUtilizationSample_t
 
 	r := C.nvmlDeviceGetProcessUtilization(h.dev, &processesUtilizationSamples[0], &processesSamplesCount, lastSeenTimeStamp)
 	if r == C.NVML_ERROR_NOT_SUPPORTED {
 		return nil, nil
 	}
-	n := int(processesSamplesCount)
+
 	utilSamples := make([]ProcessUtilization, n)
-	fmt.Printf("%d \n", n)
 	// for i := 0; i < n; i++ {
 	// 	utilSamples[i] = ProcessUtilization{
 	// 		DecUtil:   uint(processesUtilizationSamples[i].decUtil),
