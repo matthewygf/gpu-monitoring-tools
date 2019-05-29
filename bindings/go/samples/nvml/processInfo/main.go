@@ -72,7 +72,7 @@ func main() {
 	ticker := time.NewTicker(time.Second * 1)
 	defer ticker.Stop()
 
-	var row []string
+	// var row []string
 	// fmt.Println(PINFOHEADER)
 	for {
 		select {
