@@ -496,7 +496,7 @@ func (h handle) deviceGetAccountingPids() ([]uint, error) {
 	var count = C.uint(szProcs)
 	var gpuPids [szProcs]C.uint
 
-	r := C.nvmlDeviceGetAccountingPids(h.dev, &count, &gpuPids)
+	r := C.nvmlDeviceGetAccountingPids(h.dev, &count, &gpuPids[0])
 	if r == C.NVML_ERROR_NOT_SUPPORTED {
 		return nil, nil
 	}
