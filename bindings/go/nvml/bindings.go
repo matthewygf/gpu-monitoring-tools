@@ -170,7 +170,7 @@ func systemGetDriverVersion() (string, error) {
 	return C.GoString(&driver[0]), errorString(r)
 }
 
-func systemGetProcessName(pid uint) (string, error) {
+func (h handle) systemGetProcessName(pid uint) (string, error) {
 	var proc [szProcName]C.char
 
 	r := C.nvmlSystemGetProcessName(C.uint(pid), &proc[0], szProcName)
@@ -492,6 +492,25 @@ func (h handle) deviceGetComputeRunningProcesses() ([]uint, []uint64, error) {
 	return pids, mems, errorString(r)
 }
 
+func (h handle) deviceGetAccountingPids() ([]uint, error) {
+	var count = C.uint(szProcs)
+	var gpuPids [szProcs]C.uint
+
+	r := C.nvmlDeviceGetAccountingPids(h.dev, &count, &gpuPids[0])
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return nil, nil
+	}
+
+	n := int(count)
+	pids := make([]uint, n)
+
+	for i := 0; i < n; i++ {
+		pids[i] = uint(gpuPids[i])
+	}
+
+	return pids, errorString(r)
+}
+
 func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 	var procs [szProcs]C.nvmlProcessInfo_t
 	var count = C.uint(szProcs)
@@ -508,6 +527,36 @@ func (h handle) deviceGetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 		mems[i] = uint64(procs[i].usedGpuMemory)
 	}
 	return pids, mems, errorString(r)
+}
+
+func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
+	lastSeenTimeStamp := C.ulonglong(0)
+	var processesSamplesCount C.uint
+	r := C.nvmlDeviceGetProcessUtilization(h.dev, nil, &processesSamplesCount, lastSeenTimeStamp)
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return nil, nil
+	}
+
+	n := int(processesSamplesCount)
+	processesUtilizationSamples := make([]C.nvmlProcessUtilizationSample_t, n)
+
+	r = C.nvmlDeviceGetProcessUtilization(h.dev, &processesUtilizationSamples[0], &processesSamplesCount, lastSeenTimeStamp)
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return nil, nil
+	}
+
+	utilSamples := make([]ProcessUtilization, n)
+	for i := 0; i < n; i++ {
+		utilSamples[i] = ProcessUtilization{
+			DecUtil:   uint(processesUtilizationSamples[i].decUtil),
+			EncUtil:   uint(processesUtilizationSamples[i].encUtil),
+			SmUtil:    uint(processesUtilizationSamples[i].smUtil),
+			PID:       uint(processesUtilizationSamples[i].pid),
+			TimeStamp: uint64(processesUtilizationSamples[i].timeStamp),
+			MemUtil:   uint(processesUtilizationSamples[i].memUtil),
+		}
+	}
+	return utilSamples, errorString(r)
 }
 
 func (h handle) deviceGetAllRunningProcesses() ([]ProcessInfo, error) {
@@ -565,6 +614,31 @@ func (h handle) deviceGetAllRunningProcesses() ([]ProcessInfo, error) {
 	})
 
 	return processInfo, nil
+}
+
+func (h handle) deviceGetAccountingStats(pid uint) (AccountingStats, error) {
+	var stats C.nvmlAccountingStats_t
+	r := C.nvmlDeviceGetAccountingStats(h.dev, C.uint(pid), &stats)
+	var accountStats AccountingStats
+
+	if r == C.NVML_ERROR_NOT_SUPPORTED {
+		return accountStats, nil
+	}
+
+	if r != C.NVML_SUCCESS {
+		return accountStats, errorString(r)
+	}
+
+	accountStats = AccountingStats{
+		GpuUtilization:    uint(stats.gpuUtilization),
+		MemoryUtilization: uint(stats.memoryUtilization),
+		MaxMemoryUsage:    uint64(stats.maxMemoryUsage),
+		Time:              uint64(stats.time),
+		StartTime:         uint64(stats.startTime),
+		IsRunning:         uint(stats.isRunning),
+	}
+
+	return accountStats, nil
 }
 
 func (h handle) getClocksThrottleReasons() (reason ThrottleReason, err error) {

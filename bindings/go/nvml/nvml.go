@@ -47,6 +47,15 @@ type Accounting struct {
 	BufferSize *uint
 }
 
+type AccountingStats struct {
+	GpuUtilization    uint
+	MemoryUtilization uint
+	MaxMemoryUsage    uint64
+	Time              uint64
+	StartTime         uint64
+	IsRunning         uint
+}
+
 type DeviceMode struct {
 	DisplayInfo    Display
 	Persistence    ModeState
@@ -257,6 +266,15 @@ type DeviceStatus struct {
 	Processes   []ProcessInfo
 	Throttle    ThrottleReason
 	Performance PerfState
+}
+
+type ProcessUtilization struct {
+	DecUtil   uint
+	EncUtil   uint
+	MemUtil   uint
+	PID       uint
+	SmUtil    uint
+	TimeStamp uint64
 }
 
 func assert(err error) {
@@ -559,6 +577,22 @@ func (d *Device) GetGraphicsRunningProcesses() ([]uint, []uint64, error) {
 
 func (d *Device) GetAllRunningProcesses() ([]ProcessInfo, error) {
 	return d.handle.deviceGetAllRunningProcesses()
+}
+
+func (d *Device) GetAccountingPids() ([]uint, error) {
+	return d.handle.deviceGetAccountingPids()
+}
+
+func (d *Device) GetAccountingStats(pid uint) (AccountingStats, error) {
+	return d.handle.deviceGetAccountingStats(pid)
+}
+
+func (d *Device) GetProcessUtilization() ([]ProcessUtilization, error) {
+	return d.handle.deviceGetProcessUtilization()
+}
+
+func (d *Device) SystemGetProcessName(pid uint) (string, error) {
+	return d.handle.systemGetProcessName(pid)
 }
 
 func (d *Device) GetDeviceMode() (mode *DeviceMode, err error) {
