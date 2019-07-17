@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/NVIDIA/gpu-monitoring-tools/bindings/go/nvml"
+	"github.com/matthewygf/gpu-monitoring-tools/bindings/go/nvml"
 )
 
 const (

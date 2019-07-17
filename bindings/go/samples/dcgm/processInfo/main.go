@@ -7,7 +7,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/NVIDIA/gpu-monitoring-tools/bindings/go/dcgm"
+	"github.com/matthewygf/gpu-monitoring-tools/bindings/go/dcgm"
 )
 
 const (

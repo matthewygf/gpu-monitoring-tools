@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/NVIDIA/gpu-monitoring-tools/bindings/go/dcgm"
+	"github.com/matthewygf/gpu-monitoring-tools/bindings/go/dcgm"
 )
 
 // dcgmi group -c "name" --default

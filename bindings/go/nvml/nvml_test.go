@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/NVIDIA/gpu-monitoring-tools/bindings/go/nvml/nvsmi"
+	"github.com/matthewygf/gpu-monitoring-tools/bindings/go/nvml/nvsmi"
 )
 
 func check(err error, t *testing.T) {

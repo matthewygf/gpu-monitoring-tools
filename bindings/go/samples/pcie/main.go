@@ -18,7 +18,7 @@ import (
 
 var tocsv = flag.Bool("csv", false, "write values to csv instead.")
 var filepath = flag.String("logpath", "processinfo.csv", "path to create the csv file.")
-var interval = flag.Int("interval", 1, "interval time to run the profiler")
+var interval = flag.Int("interval", 250, "interval time to run the profiler in milliseconds")
 
 func checkAndPrintErrorNoFormat(message string, err error) {
 	if err != nil {

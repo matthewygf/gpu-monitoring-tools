@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/NVIDIA/gpu-monitoring-tools/bindings/go/dcgm"
+	"github.com/matthewygf/gpu-monitoring-tools/bindings/go/dcgm"
 )
 
 // map of uuids and device id
