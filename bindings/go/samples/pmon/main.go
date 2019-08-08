@@ -18,6 +18,7 @@ import (
 var tocsv = flag.Bool("csv", false, "write values to csv instead.")
 var filepath = flag.String("logpath", "processinfo.csv", "path to create the csv file.")
 var interval = flag.Int("interval", 500, "interval time to run the profiler, in milliseconds")
+var once = flag.Bool("once", true, "execute only once and exit with code 0.")
 
 func checkAndPrintErrorNoFormat(message string, err error) {
 	if err != nil {
@@ -43,7 +44,7 @@ func main() {
 
 	if fileHandle != nil {
 		writer = csv.NewWriter(fileHandle)
-		header := []string{"gpu_idx", "pid", "sm_util", "mem_util", "command_name"}
+		header := []string{"gpu_idx", "pid", "sm_util", "mem_util", "mem_used", "command_name"}
 		err := writer.Write(header)
 		checkAndPrintErrorNoFormat("could not write to file:", err)
 		writer.Flush()
@@ -70,7 +71,7 @@ func main() {
 	ticker := time.NewTicker(time.Millisecond * intervalTime)
 	defer ticker.Stop()
 	if fileHandle == nil {
-		fmt.Printf("gpu,pid,sm_util,mem_util,name\n")
+		fmt.Printf("gpu,pid,sm_util,mem_util,mem_used,name\n")
 	}
 
 	for {
@@ -93,6 +94,7 @@ func main() {
 									strconv.FormatUint(uint64(processUtils[j].PID), 10),
 									strconv.FormatUint(uint64(processUtils[j].SmUtil), 10),
 									strconv.FormatUint(uint64(processUtils[j].MemUtil), 10),
+									strconv.FormatUint(uint64(processUtils[j].MemUsed), 10),
 									name}
 								err := writer.Write(row)
 								checkAndPrintErrorNoFormat("Could not write row", err)
@@ -104,6 +106,10 @@ func main() {
 						}
 					}
 				}
+			}
+
+			if *once {
+				os.Exit(0)
 			}
 		case <-sigs:
 			return

@@ -281,6 +281,7 @@ type ProcessUtilization struct {
 	PID       uint
 	SmUtil    uint
 	TimeStamp uint64
+	MemUsed   uint64
 }
 
 func assert(err error) {

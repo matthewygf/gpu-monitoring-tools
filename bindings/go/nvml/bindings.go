@@ -559,6 +559,17 @@ func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 		return nil, nil
 	}
 
+	var m map[uint]uint64
+	cPids, cpMems, err := h.deviceGetComputeRunningProcesses()
+	if err != nil {
+		return nil, err
+	}
+
+	m = make(map[uint]uint64)
+	for i, cpid := range cPids {
+		m[cpid] = cpMems[i]
+	}
+
 	utilSamples := make([]ProcessUtilization, n)
 	for i := 0; i < n; i++ {
 		utilSamples[i] = ProcessUtilization{
@@ -568,6 +579,7 @@ func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 			PID:       uint(processesUtilizationSamples[i].pid),
 			TimeStamp: uint64(processesUtilizationSamples[i].timeStamp),
 			MemUtil:   uint(processesUtilizationSamples[i].memUtil),
+			MemUsed:   uint64(m[processesUtilizationSamples[i].pid]),
 		}
 	}
 	return utilSamples, errorString(r)
