@@ -579,7 +579,7 @@ func (h handle) deviceGetProcessUtilization() ([]ProcessUtilization, error) {
 			PID:       uint(processesUtilizationSamples[i].pid),
 			TimeStamp: uint64(processesUtilizationSamples[i].timeStamp),
 			MemUtil:   uint(processesUtilizationSamples[i].memUtil),
-			MemUsed:   uint64(m[processesUtilizationSamples[i].pid]),
+			MemUsed:   uint64(m[uint(processesUtilizationSamples[i].pid)]),
 		}
 	}
 	return utilSamples, errorString(r)
