@@ -101,7 +101,7 @@ func main() {
 								writer.Flush()
 							} else {
 								fmt.Printf("%5v,%5v,%5v,%5v,%v\n",
-									i, processUtils[j].PID, processUtils[j].SmUtil, processUtils[j].MemUtil, name)
+									i, processUtils[j].PID, processUtils[j].SmUtil, processUtils[j].MemUtil, processUtils[j].MemUsed, name)
 							}
 						}
 					}
