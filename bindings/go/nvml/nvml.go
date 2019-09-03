@@ -216,6 +216,7 @@ type Device struct {
 	Power                 *uint
 	Memory                *uint64
 	CPUAffinity           *uint
+	MinorNum              *uint
 	PCI                   PCIInfo
 	Clocks                ClockInfo
 	Topology              []P2PLink
@@ -387,6 +388,7 @@ func NewDevice(idx uint) (device *Device, err error) {
 		Model:       model,
 		Power:       power,
 		Memory:      totalMem,
+		MinorNum:    minor,
 		CPUAffinity: &node,
 		PCI: PCIInfo{
 			BusID:     *busid,
@@ -439,6 +441,7 @@ func NewDeviceLite(idx uint) (device *Device, err error) {
 		PCI: PCIInfo{
 			BusID: *busid,
 		},
+		MinorNum: minor,
 	}
 	return
 }
