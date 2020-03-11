@@ -29,7 +29,7 @@ func checkAndPrintErrorNoFormat(message string, err error) {
 func main() {
 	nvml.Init()
 	defer nvml.Shutdown()
-
+	flag.Parse()
 	var fileHandle *os.File
 	var err error
 	var writer *csv.Writer
