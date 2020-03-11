@@ -2,7 +2,7 @@
 
 package nvml
 
-// #include "nvml_dl.h"
+// #include "nvml.h"
 import "C"
 
 import (
@@ -311,21 +311,24 @@ func GetCudaDriverVersion() (*uint, *uint, error) {
 	return systemGetCudaDriverVersion()
 }
 
-func numaNode(busid string) (uint, error) {
+func numaNode(busid string) (*uint, error) {
 	// discard leading zeros of busid
 	b, err := ioutil.ReadFile(fmt.Sprintf("/sys/bus/pci/devices/%s/numa_node", strings.ToLower(busid[4:])))
 	if err != nil {
-		// XXX report node 0 if NUMA support isn't enabled
-		return 0, nil
+		// XXX report nil if NUMA support isn't enabled
+		return nil, nil
 	}
 	node, err := strconv.ParseInt(string(bytes.TrimSpace(b)), 10, 8)
 	if err != nil {
-		return 0, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
+		return nil, fmt.Errorf("%v: %v", ErrCPUAffinity, err)
 	}
 	if node < 0 {
-		node = 0 // XXX report node 0 instead of NUMA_NO_NODE
+		// XXX report nil instead of NUMA_NO_NODE
+		return nil, nil
 	}
-	return uint(node), nil
+
+	numaNode := uint(node)
+	return &numaNode, nil
 }
 
 func pciBandwidth(gen, width *uint) *uint {
@@ -388,8 +391,7 @@ func NewDevice(idx uint) (device *Device, err error) {
 		Model:       model,
 		Power:       power,
 		Memory:      totalMem,
-		MinorNum:    minor,
-		CPUAffinity: &node,
+		CPUAffinity: node,
 		PCI: PCIInfo{
 			BusID:     *busid,
 			BAR1:      bar1,
@@ -433,11 +435,14 @@ func NewDeviceLite(idx uint) (device *Device, err error) {
 		return nil, ErrUnsupportedGPU
 	}
 	path := fmt.Sprintf("/dev/nvidia%d", *minor)
+	node, err := numaNode(*busid)
+	assert(err)
 
 	device = &Device{
-		handle: h,
-		UUID:   *uuid,
-		Path:   path,
+		handle:      h,
+		UUID:        *uuid,
+		Path:        path,
+		CPUAffinity: node,
 		PCI: PCIInfo{
 			BusID: *busid,
 		},
@@ -559,8 +564,8 @@ func GetNVLink(dev1, dev2 *Device) (link P2PLinkType, err error) {
 	}
 
 	nvlink := P2PLinkUnknown
-	for _, nvbusId1 := range nvbusIds1 {
-		if *nvbusId1 == dev2.PCI.BusID {
+	for _, nvbusID1 := range nvbusIds1 {
+		if *nvbusID1 == dev2.PCI.BusID {
 			switch nvlink {
 			case P2PLinkUnknown:
 				nvlink = SingleNVLINKLink
